@@ -1,5 +1,6 @@
 # Logs
 logs
+log
 *.log
 npm-debug.log*
 
@@ -33,3 +34,5 @@ node_modules
 .node_repl_history
 
 .project
+
+.vscode
