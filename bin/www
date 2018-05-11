@@ -1,17 +1,13 @@
 #!/usr/bin/env node
 
-var config = require('../config');
-
-config.ready(start);
+const http = require('http');
+const config = require('../config');
 
 function start(conf) {
-  var app = require('../app');
-  var http = require('http');
-  var PORT = conf.SERVER_PORT;
-  var server = http.createServer(app.callback());
-  server.listen(PORT);
-  server.on('error', onError);
-  server.on('listening', onListening);
+  const logger = require('../lib/util/logger')(__filename);
+  const app = require('../app');
+  const PORT = conf.SERVER_PORT;
+  const server = http.createServer(app.callback());
 
   function onError(error) {
     if (error.syscall !== 'listen') {
@@ -20,11 +16,11 @@ function start(conf) {
 
     switch (error.code) {
       case 'EACCES':
-        console.error(PORT + ' requires elevated privileges');
+        logger.error(`${PORT} requires elevated privileges`);
         process.exit(1);
         break;
       case 'EADDRINUSE':
-        console.error(PORT + ' is already in use');
+        logger.error(`${PORT} is already in use`);
         process.exit(1);
         break;
       default:
@@ -33,6 +29,12 @@ function start(conf) {
   }
 
   function onListening() {
-    console.log('Listening on ' + PORT);
+    logger.info(`Listening on ${PORT}`);
   }
+
+  server.on('error', onError);
+  server.on('listening', onListening);
+  server.listen(PORT);
 }
+
+config.ready(start);

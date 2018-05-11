@@ -4,16 +4,9 @@ const path = require('path');
 const devConfig = require('./dev');
 
 const ROOT_PATH = path.join(__dirname, '../');
-const conf = (exports.conf = {
-  ROOT_PATH: ROOT_PATH,
-});
-
-// 判断当前环境
-if (process.env.NODE_ENV === 'production') {
-  exports.ready = productionReady;
-} else {
-  exports.ready = developmentReady;
-}
+exports.conf = {
+  ROOT_PATH,
+};
 
 /**
  * 正式环境
@@ -22,8 +15,8 @@ if (process.env.NODE_ENV === 'production') {
 function productionReady(callback) {
   // 这里可以远程获取服务配置然后设置conf
   // 也可以直接使用本地配置
-  Object.assign(conf, devConfig);
-  callback(conf);
+  Object.assign(exports.conf, devConfig);
+  callback(exports.conf);
 }
 
 /**
@@ -32,6 +25,13 @@ function productionReady(callback) {
  * @param callback
  */
 function developmentReady(callback) {
-  Object.assign(conf, devConfig);
-  callback(conf);
+  Object.assign(exports.conf, devConfig);
+  callback(exports.conf);
+}
+
+// 判断当前环境
+if (process.env.NODE_ENV === 'production') {
+  exports.ready = productionReady;
+} else {
+  exports.ready = developmentReady;
 }
