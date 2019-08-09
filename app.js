@@ -9,7 +9,7 @@ const CONFIG = require('./config').conf;
 
 const app = new Koa();
 
-logger.info(`NODE_ENV => ${process.env.NODE_ENV}`);
+logger.info(`NODE_ENV => ${process.env.NODE_ENV || 'development'}`);
 
 if (CONFIG.STATIC_PATH) {
   const staticPath = path.join(CONFIG.ROOT_PATH, CONFIG.STATIC_PATH);
