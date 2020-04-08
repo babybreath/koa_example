@@ -1,7 +1,7 @@
 const path = require('path');
 const Koa = require('koa');
 const koaStatic = require('koa-static');
-const bodyParser = require('koa-bodyparser');
+const koaBody = require('koa-body');
 const logger = require('./lib/util/logger')(__filename);
 const errorHandler = require('./lib/util/errorHandler');
 const router = require('./lib/router');
@@ -21,7 +21,15 @@ if (CONFIG.STATIC_PATH) {
 app.use(errorHandler());
 
 // 参数parse处理
-app.use(bodyParser());
+app.use(
+  koaBody({
+    multipart: true,
+    formidable: {
+      maxFileSize: 200 * 1024 * 1024 // 设置上传文件大小最大限制，默认2M
+    },
+    includeUnparsed: true,
+  })
+);
 
 // 路由处理
 app.use(router.routes()).use(router.allowedMethods());
